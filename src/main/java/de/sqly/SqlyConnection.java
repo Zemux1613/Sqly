@@ -1,5 +1,6 @@
 package de.sqly;
 
+import de.sqly.exceptions.ConnectionFailedException;
 import de.sqly.interfaces.ISqlyConnection;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +22,14 @@ public class SqlyConnection implements ISqlyConnection {
     private ExecutorService threadPool = Executors.newCachedThreadPool();
 
     @Override
-    public void connect() {
+    public void connect() throws ConnectionFailedException {
 
+        final String url = "jdbc:mysql://" + sqlyData.getHost() + ":" + sqlyData.getPort() + "/" + sqlyData.getDatabase();
         try {
-            this.connection = DriverManager.getConnection("jdbc:mysql://" + sqlyData.getHost() + ":" + sqlyData.getPort() + "/" + sqlyData.getDatabase(), sqlyData.getUsername(), sqlyData.getPasswort());
+            this.connection = DriverManager.getConnection(url, sqlyData.getUsername(), sqlyData.getPasswort());
+            System.out.println(Sqly.getInstance().getPrefix() + "The database connection was successfully created.");
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ConnectionFailedException(url);
         }
 
     }
@@ -35,7 +38,10 @@ public class SqlyConnection implements ISqlyConnection {
     public void disconnect() {
 
         try {
-            this.connection.close();
+            if(!this.connection.isClosed()){
+                this.connection.close();
+                System.out.println(Sqly.getInstance().getPrefix() + "The database connection to "+this.connection.getClientInfo().toString()+" was successfully closed.");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
