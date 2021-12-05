@@ -34,7 +34,7 @@ public class SqlyConnection implements ISqlyConnection {
 
         final String url = "jdbc:mysql://" + sqlyData.getHost() + ":" + sqlyData.getPort() + "/" + sqlyData.getDatabase();
         try {
-            this.connection = DriverManager.getConnection(url, sqlyData.getUsername(), sqlyData.getPasswort());
+            this.connection = DriverManager.getConnection(url, sqlyData.getUsername(), sqlyData.getPassword());
             System.out.println(Sqly.getInstance().getPrefix() + "The database connection was successfully created.");
         } catch (SQLException e) {
             throw new ConnectionFailedException(url);
