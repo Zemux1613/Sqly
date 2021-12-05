@@ -17,6 +17,9 @@ public class SqlyConnection implements ISqlyConnection {
     @Getter
     private Connection connection;
 
+    /**
+     * This thread pool is used for execute PrepareStatements
+     */
     private static ExecutorService threadPool = Executors.newCachedThreadPool();
 
     public SqlyConnection(SqlyData sqlyData) {
