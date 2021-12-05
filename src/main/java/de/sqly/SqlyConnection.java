@@ -3,7 +3,6 @@ package de.sqly;
 import de.sqly.exceptions.ConnectionFailedException;
 import de.sqly.interfaces.ISqlyConnection;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,10 +10,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.*;
 
-@RequiredArgsConstructor
 public class SqlyConnection implements ISqlyConnection {
 
-    private final SqlyData sqlyData;
+    private SqlyData sqlyData;
+
+    public SqlyConnection(SqlyData sqlyData){
+        this.sqlyData = sqlyData;
+        Sqly.getInstance().getConnectionPool().add(this);
+    }
 
     @Getter
     private Connection connection;
