@@ -17,7 +17,7 @@ public class SqlyConnection implements ISqlyConnection {
     @Getter
     private Connection connection;
 
-    private ExecutorService threadPool = Executors.newCachedThreadPool();
+    private static ExecutorService threadPool = Executors.newCachedThreadPool();
 
     public SqlyConnection(SqlyData sqlyData){
         this.sqlyData = sqlyData;
