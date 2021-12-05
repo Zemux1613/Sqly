@@ -19,11 +19,16 @@ public class SqlyConnection implements ISqlyConnection {
 
     private static ExecutorService threadPool = Executors.newCachedThreadPool();
 
-    public SqlyConnection(SqlyData sqlyData){
+    public SqlyConnection(SqlyData sqlyData) {
         this.sqlyData = sqlyData;
         Sqly.getInstance().getConnectionPool().add(this);
     }
 
+    /**
+     * This method creates a connection to the database specified in the SqlyData object.
+     *
+     * @throws ConnectionFailedException If the connection to the database server could not be reached, this exception is thrown.
+     */
     @Override
     public void connect() throws ConnectionFailedException {
 
@@ -37,13 +42,17 @@ public class SqlyConnection implements ISqlyConnection {
 
     }
 
+    /**
+     * This method clears an open connection between sqly and your database server.
+     * If the connection is already closed, the method does nothing.
+     */
     @Override
     public void disconnect() {
 
         try {
-            if(!this.connection.isClosed()){
+            if (!this.connection.isClosed()) {
                 this.connection.close();
-                System.out.println(Sqly.getInstance().getPrefix() + "The database connection to "+this.connection.getClientInfo().toString()+" was successfully closed.");
+                System.out.println(Sqly.getInstance().getPrefix() + "The database connection to " + this.connection.getClientInfo().toString() + " was successfully closed.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -51,6 +60,11 @@ public class SqlyConnection implements ISqlyConnection {
 
     }
 
+    /**
+     * This method validates the open connection to the database server.
+     *
+     * @return True - If the connection is valid and usable
+     */
     @Override
     public boolean isConnected() {
 
@@ -72,6 +86,11 @@ public class SqlyConnection implements ISqlyConnection {
 
     }
 
+    /**
+     * Execute a PreparedStatement for the open connection as update.
+     *
+     * @param qry The query to be executed.
+     */
     @Override
     public void executeUpdate(String qry) {
 
@@ -91,6 +110,12 @@ public class SqlyConnection implements ISqlyConnection {
 
     }
 
+    /**
+     * Execute a PreparedStatement for the opened connection as a query.
+     *
+     * @param qry The query to be executed.
+     * @return CompletableFuture with the ResultSet of your query.
+     */
     @Override
     public CompletableFuture<ResultSet> executeQuery(String qry) {
 
