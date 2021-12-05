@@ -14,15 +14,15 @@ public class SqlyConnection implements ISqlyConnection {
 
     private SqlyData sqlyData;
 
-    public SqlyConnection(SqlyData sqlyData){
-        this.sqlyData = sqlyData;
-        Sqly.getInstance().getConnectionPool().add(this);
-    }
-
     @Getter
     private Connection connection;
 
     private ExecutorService threadPool = Executors.newCachedThreadPool();
+
+    public SqlyConnection(SqlyData sqlyData){
+        this.sqlyData = sqlyData;
+        Sqly.getInstance().getConnectionPool().add(this);
+    }
 
     @Override
     public void connect() throws ConnectionFailedException {
